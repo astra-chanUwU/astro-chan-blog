@@ -1,15 +1,31 @@
 ---
 import Container from '@/components/Container.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+const setup = [
+  ['Computer', 'Mac mini M4'],
+  ['Monitor', 'BenQ GW2480'],
+  ['Mouse', 'Logitech M575, black'],
+  ['Keyboard', 'Rapoo ergonomic keyboard, wired'],
+  ['IDE', 'WebStorm'],
+  ['Terminal', 'Ghostty'],
+  ['Browser', 'Helium'],
+];
 ---
 
-<BaseLayout title="Misc" description="Other notes and small things.">
+<BaseLayout title="Misc" description="My current desk setup and the tools I use to build software.">
   <Container>
     <h1 class="page-title">Misc</h1>
-    <p class="text-muted-foreground mt-4 max-w-prose leading-relaxed">
-      A place for small things that don’t fit the writing archive yet. There’s
-      nothing here at the moment; the <a class="text-foreground" href="/blog/">writing archive</a>
-      has the current posts.
-    </p>
+    <section class="mt-8" aria-labelledby="current-setup">
+      <h2 id="current-setup" class="text-xl font-bold tracking-tight">My current setup</h2>
+      <p class="text-muted-foreground mt-3 max-w-prose leading-relaxed">The hardware and software I use day to day. I’ll update this when something changes.</p>
+      <dl class="mt-6 divide-y divide-border">
+        {setup.map(([label, value]) => (
+          <div class="grid gap-1 py-4 sm:grid-cols-[8rem_1fr] sm:gap-6">
+            <dt class="text-muted-foreground text-sm sm:pt-0.5">{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
   </Container>
 </BaseLayout>

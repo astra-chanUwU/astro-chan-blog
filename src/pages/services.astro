@@ -4,12 +4,15 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { SOCIAL_LINKS } from '@/consts';
 ---
 
-<BaseLayout title="Services" description="Services and ways to work together.">
+<BaseLayout title="Services" description="Small to medium web apps built with Astro, React, Go, and the tools that fit your project.">
   <Container>
     <h1 class="page-title">Services</h1>
-    <p class="text-muted-foreground mt-4 max-w-prose leading-relaxed">
-      This page is still taking shape. For now, you can find my public work on
-      <a class="text-foreground" href={SOCIAL_LINKS.github}>GitHub</a>.
-    </p>
+    <div class="prose mt-6">
+      <p>I build small to medium web apps, from a first working version to a tool you can use every day.</p>
+      <p>I work with Astro, React, Go, and other technologies depending on what the project needs. That can mean a fast content site, an interactive app, or a backend that brings it all together.</p>
+      <h2>Working together</h2>
+      <p>Have something in mind? Tell me what you want to build and what it needs to do.</p>
+      <p>See my work on <a href={SOCIAL_LINKS.github}>GitHub</a>{SOCIAL_LINKS.x && <> or find me on <a href={SOCIAL_LINKS.x}>X</a></>}.</p>
+    </div>
   </Container>
 </BaseLayout>
