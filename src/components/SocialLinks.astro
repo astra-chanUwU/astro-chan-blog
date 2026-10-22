@@ -1,0 +1,12 @@
+---
+import Github from '@tabler/icons/outline/brand-github.svg';
+import X from '@tabler/icons/outline/brand-x.svg';
+import Rss from '@tabler/icons/outline/rss.svg';
+import { SITE_AUTHOR, SOCIAL_LINKS } from '@/consts';
+---
+
+<nav class="social-links" aria-label="Social links">
+  {SOCIAL_LINKS.github && <a href={SOCIAL_LINKS.github} aria-label={`${SITE_AUTHOR} on GitHub`} target="_blank" rel="me noopener noreferrer"><Github aria-hidden="true" /></a>}
+  {SOCIAL_LINKS.x && <a href={SOCIAL_LINKS.x} aria-label={`${SITE_AUTHOR} on X`} target="_blank" rel="me noopener noreferrer"><X aria-hidden="true" /></a>}
+  <a href="/rss.xml" aria-label="RSS feed"><Rss aria-hidden="true" /></a>
+</nav>

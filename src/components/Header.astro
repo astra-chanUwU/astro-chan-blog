@@ -1,0 +1,22 @@
+---
+import { SITE_TITLE, SOCIAL_LINKS } from '@/consts';
+import ReaderControls from '@/components/ReaderControls.astro';
+---
+
+<div class="reader-avatar">
+  {SOCIAL_LINKS.avatar && (
+    <a href={SOCIAL_LINKS.github || '/'} aria-label={`${SITE_TITLE} on GitHub`}>
+      <img src={SOCIAL_LINKS.avatar} alt="" width="40" height="40" />
+    </a>
+  )}
+</div>
+<div class="reader-masthead">
+  <a class="reader-wordmark" href="/">{SITE_TITLE}<span>.</span></a>
+  <ReaderControls />
+</div>
+<nav class="reader-nav" aria-label="Main navigation">
+  <a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>About</a>
+  <a href="/blog/" aria-current={['/blog', '/tags', '/search'].some((path) => Astro.url.pathname.startsWith(path)) ? 'page' : undefined}>Writing</a>
+  <a href="/services/" aria-current={Astro.url.pathname.startsWith('/services') ? 'page' : undefined}>Services</a>
+  <a href="/misc/" aria-current={Astro.url.pathname.startsWith('/misc') ? 'page' : undefined}>Misc</a>
+</nav>

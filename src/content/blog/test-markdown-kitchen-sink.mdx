@@ -1,0 +1,51 @@
+---
+title: "Markdown kitchen sink (test)"
+description: "A second dummy post exercising headings, lists, tables, and code."
+pubDate: 2026-10-21
+tags: ["test", "markdown"]
+---
+
+import Counter from "../../components/examples/Counter.tsx";
+
+A small sample of Markdown typography, code, and an interactive React component.[^1]
+
+## Lists
+
+- Minimal setup
+- Fast builds
+- No JavaScript by default
+
+1. Write Markdown
+2. Build with Astro
+3. Ship static HTML
+
+## Table
+
+| Feature             | Status |
+| ------------------- | ------ |
+| Content collections | ✅     |
+| Tailwind v4         | ✅     |
+| Dark mode           | ✅     |
+
+## Inline code and links
+
+Use `getCollection('blog')` to load posts, and read the
+[Astro content collections docs](https://docs.astro.build/en/guides/content-collections/)
+for the full API.
+
+## An interactive example
+
+This counter is a React component. Astro loads its JavaScript when the example
+becomes visible.[^2]
+
+```mdx
+import Counter from "../../components/examples/Counter.tsx";
+
+<Counter client:visible />
+```
+
+<Counter client:visible />
+
+[^1]: This sample post checks typography and can be removed when you start writing.
+
+[^2]: `client:visible` hydrates this component; the rest of the page stays static.

@@ -1,0 +1,15 @@
+---
+import Container from '@/components/Container.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SOCIAL_LINKS } from '@/consts';
+---
+
+<BaseLayout title="Services" description="Services and ways to work together.">
+  <Container>
+    <h1 class="page-title">services</h1>
+    <p class="text-muted-foreground mt-4 max-w-prose leading-relaxed">
+      This page is still taking shape. For now, you can find my public work on
+      <a class="text-foreground" href={SOCIAL_LINKS.github}>GitHub</a>.
+    </p>
+  </Container>
+</BaseLayout>

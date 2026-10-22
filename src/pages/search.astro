@@ -1,0 +1,43 @@
+---
+import Container from '@/components/Container.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getAllTags, getSortedPosts } from '@/lib/posts';
+
+const tags = getAllTags(await getSortedPosts());
+---
+
+<BaseLayout title="Search" description="Search writing by words or tag." noindex>
+  <Container>
+    <h1 class="page-title">search</h1>
+    <form id="search-form" action="/search/" method="get" role="search" class="mt-5 max-w-xl">
+      <label for="search-query" class="font-sans text-sm">Search writing</label>
+      <div class="mt-2 flex items-center gap-3">
+        <input
+          id="search-query"
+          name="q"
+          type="search"
+          autocomplete="off"
+          class="text-foreground placeholder:text-muted-foreground min-w-0 flex-1 rounded-md border-0 bg-[var(--reader-control)] px-3 py-2 text-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+        />
+        <button type="submit" class="text-muted-foreground hover:text-foreground px-1 py-2 text-sm">Search</button>
+      </div>
+      <label for="search-tag" class="text-muted-foreground mt-4 block font-sans text-sm">Tag</label>
+      <select id="search-tag" name="tag" class="text-foreground mt-1 rounded-md border-0 bg-[var(--reader-control)] py-2 pl-3 pr-9 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current">
+        <option value="">All tags</option>
+        {tags.map((tag) => <option value={tag}>#{tag}</option>)}
+      </select>
+    </form>
+    <p id="search-status" class="text-muted-foreground mt-5 text-sm" role="status" aria-live="polite">
+      Enter a word or choose a tag to search.
+    </p>
+    <ol id="search-results" class="mt-5 space-y-6" aria-label="Search results"></ol>
+    <noscript>
+      <p class="text-muted-foreground mt-5 text-sm">Search needs JavaScript. You can browse posts from <a href="/blog/">Writing</a>.</p>
+    </noscript>
+    <p id="search-runtime" class="sr-only" data-dev={import.meta.env.DEV}></p>
+  </Container>
+</BaseLayout>
+
+<script>
+  import '@/scripts/search';
+</script>

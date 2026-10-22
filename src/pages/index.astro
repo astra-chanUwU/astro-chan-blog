@@ -1,16 +1,15 @@
 ---
+import Container from '@/components/Container.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+  <Container>
+    <h1 class="page-title">About</h1>
+    <div class="prose">
+      <p>I’m Astro chan, a software engineer currently freelancing. I build software and do kawaii things on the side.</p>
+      <p>I mostly work with <a href="https://go.dev/" target="_blank" rel="noopener noreferrer">Go</a> and <a href="https://www.typescriptlang.org/" target="_blank" rel="noopener noreferrer">TypeScript</a>. Lately, I’ve been experimenting with Elm through <a href="https://github.com/astra-chanUwU/kura-v3-elm-go" target="_blank" rel="noopener noreferrer">Kura</a>, an imageboard and media library.</p>
+      <p>This is where I keep <a href="/blog/">notes</a> about software, tools, and whatever I’m trying to understand.</p>
+    </div>
+  </Container>
+</BaseLayout>

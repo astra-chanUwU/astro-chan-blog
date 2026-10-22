@@ -1,0 +1,24 @@
+---
+import FormattedDate from '@/components/FormattedDate.astro';
+import { getPostUrl } from '@/lib/posts';
+import type { Post } from '@/lib/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, tags } = post.data;
+---
+
+<article class="post-card">
+  <a href={getPostUrl(post)} class="post-card-link">
+    <div class="post-card-meta">
+      <FormattedDate date={pubDate} />
+      {tags.length > 0 && <span aria-hidden="true">·</span>}
+      {tags.slice(0, 3).map((tag) => <span>{tag}</span>)}
+    </div>
+    <h2>{title}</h2>
+    <p>{description}</p>
+  </a>
+</article>

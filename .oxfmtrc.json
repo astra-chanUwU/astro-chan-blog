@@ -1,0 +1,10 @@
+{
+  "ignorePatterns": [
+    "dist",
+    ".astro",
+    "node_modules",
+    "pnpm-lock.yaml",
+    "src/components/starwind",
+    "src/styles/starwind.css"
+  ]
+}

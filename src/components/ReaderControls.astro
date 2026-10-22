@@ -1,0 +1,62 @@
+---
+import { RadioGroup } from '@starwind-ui/astro/radio-group';
+import { Radio } from '@starwind-ui/astro/radio';
+import { ThemeToggle } from '@/components/starwind/theme-toggle';
+---
+
+<div class="reader-tools">
+  <RadioGroup.Root
+    class="reader-width-control"
+    aria-label="Reading width"
+    orientation="horizontal"
+    name="reading-width"
+    defaultValue="default"
+    data-reading-width-control
+  >
+    <Radio.Root value="narrow" nativeButton class="reader-width-option">Narrow</Radio.Root>
+    <Radio.Root value="default" nativeButton defaultChecked class="reader-width-option">Default</Radio.Root>
+    <Radio.Root value="wide" nativeButton class="reader-width-option">Wide</Radio.Root>
+  </RadioGroup.Root>
+  <ThemeToggle
+    ariaLabel="Toggle color theme"
+    variant="default"
+    size="sm"
+    class="reader-theme-toggle"
+  />
+</div>
+
+<script>
+  const validWidths = new Set(['narrow', 'default', 'wide']);
+  const setupReaderControls = () => {
+    const root = document.documentElement;
+    const group = document.querySelector<HTMLElement>('[data-reading-width-control]');
+    if (!group || group.dataset.widthReady === 'true') return;
+    group.dataset.widthReady = 'true';
+
+    const applyWidth = (width: string, persist = false) => {
+      if (!validWidths.has(width)) return;
+      root.dataset.readingWidth = width;
+      if (persist) {
+        try { localStorage.setItem('reading-width', width); } catch {}
+      }
+    };
+
+    // Starwind updates this value for both keyboard and pointer selection.
+    const observer = new MutationObserver(() => applyWidth(group.dataset.value ?? '', true));
+    observer.observe(group, { attributes: true, attributeFilter: ['data-value'] });
+
+    try {
+      const saved = localStorage.getItem('reading-width');
+      if (saved && validWidths.has(saved)) {
+        applyWidth(saved);
+        window.setTimeout(() => {
+          const option = group.querySelector<HTMLButtonElement>(`[data-value="${saved}"]`);
+          if (option && group.getAttribute('data-value') !== saved) option.click();
+        }, 0);
+      }
+    } catch {}
+  };
+
+  setupReaderControls();
+  document.addEventListener('astro:page-load', setupReaderControls);
+</script>

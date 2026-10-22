@@ -1,0 +1,66 @@
+---
+import { ThemeInitScript } from '@starwind-ui/astro/theme';
+import Footer from '@/components/Footer.astro';
+import Header from '@/components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '@/consts';
+import '@/styles/starwind.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  article?: { publishedTime: string; modifiedTime?: string };
+  noindex?: boolean;
+}
+
+const {
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
+  article,
+  noindex = false,
+} = Astro.props;
+const pageTitle = title === SITE_TITLE ? title : `${title} — ${SITE_TITLE}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" data-reading-width="default">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preload" href="/fonts/atkinson-hyperlegible-regular.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {article?.publishedTime && <meta property="article:published_time" content={article.publishedTime} />}
+    {article?.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime} />}
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml" />
+    <ThemeInitScript />
+    <script is:inline>
+      (() => {
+        try {
+          const width = localStorage.getItem('reading-width');
+          if (width === 'narrow' || width === 'default' || width === 'wide') {
+            document.documentElement.dataset.readingWidth = width;
+          }
+        } catch {}
+      })();
+    </script>
+  </head>
+  <body class="bg-background text-foreground min-h-screen font-sans antialiased">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="reader-shell">
+      <Header />
+      <main id="main-content" class="reader-main"><slot /></main>
+      <Footer />
+    </div>
+  </body>
+</html>
