@@ -1,15 +1,30 @@
 ---
 import Container from '@/components/Container.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import { getSortedPosts } from '@/lib/posts';
+
+const recentPosts = (await getSortedPosts()).slice(0, 3);
 ---
 
 <BaseLayout>
   <Container>
-    <h1 class="page-title">About</h1>
-    <div class="prose">
-      <p>I’m Astro chan, a software engineer currently freelancing. I build software and do kawaii things on the side.</p>
+    <header class="home-intro">
+      <h1 class="home-title">About me</h1>
+      <p class="home-lead">I’m Astro chan, a freelance software engineer. I build software and do kawaii things on the side.</p>
+    </header>
+    <div class="prose home-about">
+      <p>I keep notes here about software, tools, and things I’m trying to understand.</p>
       <p>I mostly work with <a href="https://go.dev/" target="_blank" rel="noopener noreferrer">Go</a> and <a href="https://www.typescriptlang.org/" target="_blank" rel="noopener noreferrer">TypeScript</a>. Lately, I’ve been experimenting with Elm through <a href="https://github.com/astra-chanUwU/kura-v3-elm-go" target="_blank" rel="noopener noreferrer">Kura</a>, an imageboard and media library.</p>
-      <p>This is where I keep <a href="/blog/">notes</a> about software, tools, and whatever I’m trying to understand.</p>
     </div>
+    {recentPosts.length > 0 && (
+      <section class="home-writing" aria-labelledby="recent-writing">
+        <div class="section-heading">
+          <h2 id="recent-writing">Recent writing</h2>
+          <a href="/blog/">All writing</a>
+        </div>
+        {recentPosts.map((post) => <PostCard post={post} />)}
+      </section>
+    )}
   </Container>
 </BaseLayout>

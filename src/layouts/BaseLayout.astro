@@ -23,7 +23,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="en" data-reading-width="default">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -44,16 +44,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml" />
     <ThemeInitScript />
-    <script is:inline>
-      (() => {
-        try {
-          const width = localStorage.getItem('reading-width');
-          if (width === 'narrow' || width === 'default' || width === 'wide') {
-            document.documentElement.dataset.readingWidth = width;
-          }
-        } catch {}
-      })();
-    </script>
   </head>
   <body class="bg-background text-foreground min-h-screen font-sans antialiased">
     <a href="#main-content" class="skip-link">Skip to content</a>

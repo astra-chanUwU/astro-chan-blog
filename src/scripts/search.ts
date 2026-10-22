@@ -24,6 +24,7 @@ const queryInput = document.querySelector<HTMLInputElement>("#search-query");
 const tagSelect = document.querySelector<HTMLSelectElement>("#search-tag");
 const status = document.querySelector<HTMLParagraphElement>("#search-status");
 const resultsList = document.querySelector<HTMLOListElement>("#search-results");
+const clearButton = document.querySelector<HTMLButtonElement>("#search-clear");
 const runtime = document.querySelector<HTMLElement>("#search-runtime");
 
 if (form && queryInput && tagSelect && status && resultsList && runtime) {
@@ -38,15 +39,11 @@ if (form && queryInput && tagSelect && status && resultsList && runtime) {
     return pagefindPromise;
   };
 
-  const clearResults = () => {
-    resultsList.replaceChildren();
-  };
-
   const setStatus = (message: string) => {
     status.textContent = message;
   };
 
-  const makeResult = (item: PagefindResultData): HTMLLIElement | null => {
+  const makeResult = (item: PagefindResultData, query: string): HTMLLIElement | null => {
     if (!item.url || item.url.startsWith("//")) return null;
 
     const href = new URL(item.url, window.location.origin);
@@ -54,11 +51,13 @@ if (form && queryInput && tagSelect && status && resultsList && runtime) {
 
     const title = item.meta?.title?.trim() || "Untitled post";
     const row = document.createElement("li");
+    row.className = "search-result";
     const link = document.createElement("a");
     link.href = `${href.pathname}${href.search}${href.hash}`;
     link.textContent = title;
-    link.className = "font-sans text-lg font-semibold text-foreground";
-    row.append(link);
+    link.className = "search-result-link";
+    const heading = document.createElement("h2");
+    heading.append(link);
 
     const date = item.meta?.date;
     if (date) {
@@ -67,16 +66,30 @@ if (form && queryInput && tagSelect && status && resultsList && runtime) {
       const parsed = new Date(date);
       time.textContent = Number.isNaN(parsed.valueOf())
         ? date
-        : parsed.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-      time.className = "text-muted-foreground ml-3 text-xs";
+        : parsed.toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" });
+      time.className = "search-result-date";
       row.append(time);
     }
 
-    const excerpt = item.plain_excerpt?.trim();
+    row.append(heading);
+    const excerpt = query
+      ? item.plain_excerpt?.trim() || item.meta?.description?.trim()
+      : item.meta?.description?.trim();
     if (excerpt) {
       const paragraph = document.createElement("p");
-      paragraph.className = "text-muted-foreground mt-1 text-sm leading-relaxed";
-      paragraph.textContent = excerpt;
+      paragraph.className = "search-result-excerpt";
+      // Decode Pagefind's escaped text without interpreting it as HTML.
+      const entities: Record<string, string> = {
+        amp: "&",
+        lt: "<",
+        gt: ">",
+        quot: '"',
+        "#39": "'",
+      };
+      paragraph.textContent = excerpt.replace(
+        /&(amp|lt|gt|quot|#39);/g,
+        (_, name: string) => entities[name] ?? "",
+      );
       row.append(paragraph);
     }
 
@@ -90,12 +103,8 @@ if (form && queryInput && tagSelect && status && resultsList && runtime) {
     const query = queryInput.value.trim();
     const tag = tagSelect.value;
 
-    clearResults();
-    if (!query && !tag) {
-      setStatus("Enter a word or choose a tag to search.");
-      return;
-    }
-
+    if (clearButton) clearButton.hidden = !query && !tag;
+    resultsList.setAttribute("aria-busy", "true");
     setStatus("Searching…");
     try {
       const pagefind = await loadPagefind();
@@ -105,28 +114,38 @@ if (form && queryInput && tagSelect && status && resultsList && runtime) {
       const data = await Promise.all(search.results.map((result) => result.data()));
       if (currentSequence !== sequence) return;
 
-      const rows = data.map(makeResult).filter((row): row is HTMLLIElement => row !== null);
+      if (!query) data.sort((a, b) => (b.meta?.date ?? "").localeCompare(a.meta?.date ?? ""));
+      const rows = data
+        .map((item) => makeResult(item, query))
+        .filter((row): row is HTMLLIElement => row !== null);
       resultsList.replaceChildren(...rows);
-      setStatus(`${rows.length} result${rows.length === 1 ? "" : "s"}.`);
-      if (rows.length === 0) setStatus("No matching posts.");
+      const context = [query ? `for “${query}”` : "", tag ? `in ${tag}` : ""]
+        .filter(Boolean)
+        .join(" ");
+      setStatus(
+        `${rows.length} post${rows.length === 1 ? "" : "s"}${context ? ` ${context}` : ""}.`,
+      );
+      if (rows.length === 0)
+        setStatus("No matching posts. Try a shorter phrase or choose another topic.");
     } catch {
       if (currentSequence !== sequence) return;
+      resultsList.replaceChildren();
+      pagefindPromise = undefined;
       setStatus(
         isDev
-          ? "Search index is not available in development. Run pnpm build, then preview the site to search the index."
+          ? "The local search index has not been built yet. Run pnpm build, then try again."
           : "Search is unavailable right now. Please try again later.",
       );
+    } finally {
+      if (currentSequence === sequence) resultsList.setAttribute("aria-busy", "false");
     }
   };
 
   const scheduleSearch = () => {
     sequence += 1;
-    clearResults();
-    setStatus(
-      queryInput.value.trim() || tagSelect.value
-        ? "Searching…"
-        : "Enter a word or choose a tag to search.",
-    );
+    resultsList.setAttribute("aria-busy", "true");
+    setStatus("Searching…");
+    if (clearButton) clearButton.hidden = !queryInput.value.trim() && !tagSelect.value;
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => void runSearch(), 250);
   };
@@ -155,6 +174,15 @@ if (form && queryInput && tagSelect && status && resultsList && runtime) {
   });
   tagSelect.addEventListener("change", () => {
     syncQuery();
+    void runSearch();
+  });
+
+  form.addEventListener("reset", (event) => {
+    event.preventDefault();
+    queryInput.value = "";
+    tagSelect.value = "";
+    syncQuery();
+    queryInput.focus();
     void runSearch();
   });
 

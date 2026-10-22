@@ -5,13 +5,15 @@ import ReaderControls from '@/components/ReaderControls.astro';
 
 <div class="reader-avatar">
   {SOCIAL_LINKS.avatar && (
-    <a href={SOCIAL_LINKS.github || '/'} aria-label={`${SITE_TITLE} on GitHub`}>
-      <img src={SOCIAL_LINKS.avatar} alt="" width="40" height="40" />
+    <a href="/" aria-label={`${SITE_TITLE} home`}>
+      <img src={SOCIAL_LINKS.avatar} alt="" width="56" height="56" />
     </a>
   )}
 </div>
 <div class="reader-masthead">
-  <a class="reader-wordmark" href="/">{SITE_TITLE}<span>.</span></a>
+  <div class="reader-identity">
+    <a class="reader-wordmark" href="/">{SITE_TITLE}</a>
+  </div>
   <ReaderControls />
 </div>
 <nav class="reader-nav" aria-label="Main navigation">

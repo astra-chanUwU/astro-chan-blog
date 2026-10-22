@@ -14,6 +14,7 @@ const blog = defineCollection({
       updatedDate: z.coerce.date().optional(),
       tags: z.array(tagSchema).default([]),
       draft: z.boolean().default(false),
+      sample: z.boolean().default(false),
     })
     .superRefine((data, context) => {
       if (data.updatedDate && data.updatedDate < data.pubDate) {

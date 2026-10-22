@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate, updatedDate, tags, draft } = post.data;
+const { title, description, pubDate, updatedDate, tags, draft, sample } = post.data;
 const formatDate = (date: Date) => date.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
 
@@ -19,6 +19,7 @@ const formatDate = (date: Date) => date.toLocaleDateString('en-GB', { year: 'num
 >
   <article class="post-article" data-pagefind-body data-pagefind-filter="type:post">
     <header class="post-header">
+      <a class="article-breadcrumb" href="/blog/" data-pagefind-ignore>← Writing</a>
       <div class="post-meta">
         <time datetime={pubDate.toISOString()} data-pagefind-meta="date[datetime]">
           {formatDate(pubDate)}
@@ -27,6 +28,7 @@ const formatDate = (date: Date) => date.toLocaleDateString('en-GB', { year: 'num
       </div>
       <h1 class="post-title" data-pagefind-meta="title">{title}</h1>
       <p class="post-description" data-pagefind-meta="description">{description}</p>
+      {sample && <p class="sample-notice" data-pagefind-ignore>Sample article for testing layout and search.</p>}
       {draft && <p class="text-muted-foreground text-sm" data-pagefind-ignore>Draft preview</p>}
       {tags.length > 0 && (
         <nav class="post-tags" aria-label="Post tags">

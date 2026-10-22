@@ -11,16 +11,14 @@ const tags = getAllTags(posts);
 
 <BaseLayout title="Writing" description="Notes, projects, and things I’m learning.">
   <Container>
-    <h1 class="page-title">writing</h1>
+    <header class="page-intro">
+      <h1 class="page-title">Writing</h1>
+      <p class="page-description">Notes on software, things I’m building, and what I learn along the way.</p>
+    </header>
     <DiscoveryBar tags={tags} />
     <div class="mt-4">
       {posts.map((post) => (
-        <>
-          {import.meta.env.DEV && post.data.draft && (
-            <p class="text-muted-foreground pt-4 text-xs" aria-label="Draft preview">Draft preview</p>
-          )}
-          <PostCard post={post} />
-        </>
+        <PostCard post={post} />
       ))}
     </div>
     {posts.length === 0 && (

@@ -6,6 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
+import { devSearchIndex } from "./scripts/dev-search-index.mjs";
 
 const env = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
 const site = new URL(process.env.SITE_URL ?? env.SITE_URL ?? "http://localhost:4321");
@@ -38,7 +39,7 @@ export default defineConfig({
   },
   devToolbar: { enabled: false },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), devSearchIndex()],
     resolve: {
       alias: {
         "@": "/src",

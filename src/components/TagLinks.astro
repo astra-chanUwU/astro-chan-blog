@@ -1,0 +1,13 @@
+---
+import { getTagUrl } from '@/lib/posts';
+interface Props { tags: string[]; activeTag?: string; }
+const { tags, activeTag } = Astro.props;
+---
+
+<nav class="tag-links" aria-label="Browse writing by tag">
+  <a href="/blog/" aria-current={!activeTag ? 'page' : undefined}>All posts</a>
+  {tags.map((tag) => (
+    <a href={getTagUrl(tag)} aria-current={tag === activeTag ? 'page' : undefined}>{tag}</a>
+  ))}
+  <a href="/tags/">Topic index</a>
+</nav>

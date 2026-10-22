@@ -1,10 +1,9 @@
 # astro-chan
 
 A personal technical blog built with Astro, Tailwind CSS v4, and Starwind UI.
-The design stays quiet: a small profile, simple navigation, borderless sections,
-blue links, and reader controls at the top right. Atkinson Hyperlegible is used
-for text and JetBrains Mono for code; both are bundled in `public/fonts/` with
-their licenses.
+The layout uses a wide reading column, simple navigation, and a light/dark
+switch. Atkinson Hyperlegible is used for text and JetBrains Mono for code;
+both are bundled in `public/fonts/` with their licenses.
 
 ## Run locally
 
@@ -19,15 +18,13 @@ pnpm dev --background
 The development server runs at `http://localhost:4321`. Manage it with
 `pnpm astro dev status`, `pnpm astro dev logs`, and `pnpm astro dev stop`.
 
-Pagefind indexes the finished HTML, so use a production preview to test search:
+Pagefind indexes the finished HTML. Run `pnpm build` once before testing search,
+and again after changing article content. The dev server serves the generated
+`dist/pagefind/` index, so search works at `http://localhost:4321/search/` too.
+The index is a snapshot of the last build and excludes drafts. Reload an open
+search page after rebuilding to load the new index.
 
-```sh
-pnpm build
-pnpm preview --port 4322
-```
-
-Open `http://localhost:4322`. `pnpm build` always rebuilds the search index.
-The development search page explains this workflow when no index is available.
+For a production preview, run `pnpm preview --port 4322` after building.
 
 ## Personal settings
 
@@ -58,7 +55,10 @@ draft: true
 Tags use lowercase slugs, such as `react` or `web-development`. `updatedDate`
 is optional and must not precede `pubDate`. Drafts appear in development with
 a preview label; production builds omit them from pages, search, tags, and RSS.
-The two `test-` posts are disposable examples.
+The two `test-` posts and ten `sample-` articles are disposable examples.
+The sample articles cover a Go/SQLite media library and include code, related
+links, and overlapping tags. Try searches such as `httptest`, `transaction`,
+`checksum`, and `debounce`, then combine a query with a topic filter.
 
 Markdown code fences are highlighted by Astro's built-in Shiki themes, with
 JetBrains Mono, a language label, and a copy button. Add footnotes with
