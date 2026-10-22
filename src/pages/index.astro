@@ -1,4 +1,5 @@
 ---
+import { getSitePath } from '@/lib/posts';
 import Container from '@/components/Container.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
@@ -21,7 +22,7 @@ const recentPosts = (await getSortedPosts()).slice(0, 3);
       <section class="home-writing" aria-labelledby="recent-writing">
         <div class="section-heading">
           <h2 id="recent-writing">Recent writing</h2>
-          <a href="/blog/">All writing</a>
+          <a href={getSitePath("/blog/")}>All writing</a>
         </div>
         {recentPosts.map((post) => <PostCard post={post} />)}
       </section>

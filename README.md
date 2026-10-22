@@ -82,3 +82,30 @@ and Pagefind indexing. `pnpm check`, `pnpm lint`, and `pnpm build` also run
 individually. Generated files live in `dist/`; content and components stay in
 `src/`. RSS is `/rss.xml`, the sitemap index is `/sitemap-index.xml`, and tags
 are browsable at `/tags/`.
+
+## Article details
+
+Use ordinary Markdown footnotes (`[^note]` and `[^note]: ...`) in either Markdown
+or MDX. References and return arrows keep native fragment links and browser
+history, scroll smoothly, and highlight the destination. Reduced-motion settings
+are respected. Use `<mark>text</mark>` for a small inline highlight. Code blocks
+have a language label and a copy button; JavaScript is only needed for copying.
+Astro's client router fades page changes and reinitializes search and article
+controls after navigation.
+
+## Deployment
+
+Push to `main` to run `.github/workflows/deploy.yml`. It checks formatting and
+lint, runs Astro diagnostics, builds the site and Pagefind index, then deploys
+to GitHub Pages. The public URL is
+`https://astra-chanuwu.github.io/astro-chan-blog/`.
+
+`SITE_URL` remains the origin; `BASE_PATH=/astro-chan-blog` adds the project
+path. Keep `BASE_PATH=/` locally or for a future custom domain. Internal template
+links use `getSitePath()`. Root-relative Markdown links and images are prefixed
+at build time by the shared Markdown/MDX processor; JSX URLs in MDX should use
+`getSitePath()` explicitly. Canonicals, structured data, feeds, sitemap, icons,
+and local fonts use the deployment path too.
+
+The ten sample articles and two test posts are intentionally public and searchable
+for testing. Replace or remove them before treating the archive as real writing.

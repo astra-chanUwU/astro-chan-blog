@@ -1,0 +1,8 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getSitePath } from '@/lib/posts';
+---
+<BaseLayout title="Page not found" noindex>
+  <h1 class="page-title">Page not found</h1>
+  <p class="text-muted-foreground mt-4">This link may have moved. <a href={getSitePath('/blog/')} class="text-foreground underline underline-offset-4">Browse the writing archive</a> or <a href={getSitePath('/search/')} class="text-foreground underline underline-offset-4">search for a post</a>.</p>
+</BaseLayout>

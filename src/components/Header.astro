@@ -1,24 +1,27 @@
 ---
+import { getSitePath } from '@/lib/posts';
 import { SITE_TITLE, SOCIAL_LINKS } from '@/consts';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pathname = Astro.url.pathname.slice(base.length) || '/';
 import ReaderControls from '@/components/ReaderControls.astro';
 ---
 
 <div class="reader-avatar">
   {SOCIAL_LINKS.avatar && (
-    <a href="/" aria-label={`${SITE_TITLE} home`}>
-      <img src={SOCIAL_LINKS.avatar} alt="" width="56" height="56" />
+    <a href={getSitePath("/")} aria-label={`${SITE_TITLE} home`}>
+      <img src={SOCIAL_LINKS.avatar.startsWith('/') ? getSitePath(SOCIAL_LINKS.avatar) : SOCIAL_LINKS.avatar} alt="" width="56" height="56" />
     </a>
   )}
 </div>
 <div class="reader-masthead">
   <div class="reader-identity">
-    <a class="reader-wordmark" href="/">{SITE_TITLE}</a>
+    <a class="reader-wordmark" href={getSitePath("/")}>{SITE_TITLE}</a>
   </div>
   <ReaderControls />
 </div>
 <nav class="reader-nav" aria-label="Main navigation">
-  <a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>About</a>
-  <a href="/blog/" aria-current={['/blog', '/tags', '/search'].some((path) => Astro.url.pathname.startsWith(path)) ? 'page' : undefined}>Writing</a>
-  <a href="/services/" aria-current={Astro.url.pathname.startsWith('/services') ? 'page' : undefined}>Services</a>
-  <a href="/misc/" aria-current={Astro.url.pathname.startsWith('/misc') ? 'page' : undefined}>Misc</a>
+  <a href={getSitePath("/")} aria-current={pathname === '/' ? 'page' : undefined}>About</a>
+  <a href={getSitePath("/blog/")} aria-current={['/blog', '/tags', '/search'].some((path) => pathname.startsWith(path)) ? 'page' : undefined}>Writing</a>
+  <a href={getSitePath("/services/")} aria-current={pathname.startsWith('/services') ? 'page' : undefined}>Services</a>
+  <a href={getSitePath("/misc/")} aria-current={pathname.startsWith('/misc') ? 'page' : undefined}>Misc</a>
 </nav>

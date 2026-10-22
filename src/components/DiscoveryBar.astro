@@ -1,4 +1,5 @@
 ---
+import { getSitePath } from '@/lib/posts';
 import SearchField from '@/components/SearchField.astro';
 import TagLinks from '@/components/TagLinks.astro';
 interface Props { tags: string[]; activeTag?: string; }
@@ -6,7 +7,7 @@ const { tags, activeTag } = Astro.props;
 ---
 
 <div class="discovery-bar">
-  <form action="/search/" method="get" role="search">
+  <form action={getSitePath("/search/")} method="get" role="search">
     <SearchField id="blog-search" />
     {activeTag && <input type="hidden" name="tag" value={activeTag} />}
   </form>

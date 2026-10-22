@@ -1,4 +1,5 @@
 ---
+import { getSitePath } from '@/lib/posts';
 import DiscoveryBar from '@/components/DiscoveryBar.astro';
 import Container from '@/components/Container.astro';
 import PostCard from '@/components/PostCard.astro';
@@ -25,7 +26,7 @@ const tags = getAllTags(await getSortedPosts());
 
 <BaseLayout title={`#${tag}`} description={`Posts tagged ${tag}.`}>
   <Container>
-    <p class="text-muted-foreground mb-3 font-sans text-sm"><a href="/tags/">← Topics</a></p>
+    <p class="text-muted-foreground mb-3 font-sans text-sm"><a href={getSitePath("/tags/")}>← Topics</a></p>
     <h1 class="page-title">{tag}</h1>
     <p class="text-muted-foreground mt-2 font-sans text-sm">
       {posts.length} post{posts.length === 1 ? '' : 's'}
@@ -36,7 +37,7 @@ const tags = getAllTags(await getSortedPosts());
         <PostCard post={post} />
       ))}
     </div>
-    <a href="/blog/" class="text-muted-foreground hover:text-foreground mt-8 inline-block font-sans text-sm">
+    <a href={getSitePath("/blog/")} class="text-muted-foreground hover:text-foreground mt-8 inline-block font-sans text-sm">
       ← all writing
     </a>
   </Container>
