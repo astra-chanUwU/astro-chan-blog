@@ -1,0 +1,98 @@
+/* Standard Markdown/MDX footnotes keep real fragment links and work without JS. */
+.prose sup {
+  margin-left: 2px;
+  font-size: 0.65em;
+  line-height: 1;
+  vertical-align: super;
+}
+.prose [data-footnote-ref] {
+  padding: 0.2em 0.3em;
+  border-radius: 3px;
+  font-weight: 600;
+  text-decoration: none;
+  scroll-margin-block: 25vh;
+}
+.prose [data-footnote-ref]:hover {
+  background: var(--reader-highlight);
+}
+.prose [data-footnotes] {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--reader-line);
+  color: var(--reader-soft);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+.prose [data-footnotes] > h2 {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0 0 0.8rem;
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
+  color: var(--reader-ink);
+  font-size: 1rem;
+  font-weight: 600;
+}
+.prose [data-footnotes] li {
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  scroll-margin-block: 25vh;
+}
+.prose [data-footnotes] li::marker {
+  color: var(--reader-link);
+  font-size: 0.85em;
+}
+.prose [data-footnote-backref] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  min-height: 1.75rem;
+  margin-left: 0.25rem;
+  border-radius: 4px;
+  color: var(--reader-link);
+  text-decoration: none;
+}
+.prose [data-footnote-backref]:hover {
+  background: var(--reader-highlight);
+}
+.prose :is([data-footnote-ref], [data-footnotes] li):target,
+.prose p:has([data-footnote-ref]:target) {
+  background: var(--reader-highlight);
+  color: var(--reader-ink);
+}
+.prose p:has([data-footnote-ref]:target) {
+  border-radius: 4px;
+}
+.prose .code-block-copy {
+  min-width: 44px;
+  min-height: 36px;
+  border-radius: 4px;
+}
+.prose .code-block-copy:disabled {
+  cursor: wait;
+}
+@media (pointer: coarse) {
+  .prose .code-block-copy,
+  .prose [data-footnote-backref] {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .prose :is([data-footnote-ref], [data-footnotes] li):target,
+  .prose p:has([data-footnote-ref]:target) {
+    animation: footnote-arrive 1.6s ease-out;
+  }
+  @keyframes footnote-arrive {
+    from {
+      box-shadow: 0 0 0 4px var(--reader-highlight);
+    }
+    to {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+}

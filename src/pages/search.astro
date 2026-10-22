@@ -1,9 +1,10 @@
 ---
 import Container from '@/components/Container.astro';
 import SearchField from '@/components/SearchField.astro';
+import TopicSelect from '@/components/TopicSelect.astro';
 import PostCard from '@/components/PostCard.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getAllTags, getSortedPosts } from '@/lib/posts';
+import { getAllTags, getSitePath, getSortedPosts } from '@/lib/posts';
 const posts = await getSortedPosts({ includeDrafts: false });
 const tags = getAllTags(posts);
 ---
@@ -14,24 +15,18 @@ const tags = getAllTags(posts);
       <h1 class="page-title">Search</h1>
       <p class="page-description">Find something in the notes. Titles, article text, and code are all searchable.</p>
     </header>
-    <form id="search-form" action="/search/" method="get" role="search">
+    <form id="search-form" action={getSitePath("/search/")} method="get" role="search">
       <SearchField id="search-query" />
       <div class="search-filters">
-        <div class="search-tag-filter">
-          <label for="search-tag">Topic</label>
-          <select id="search-tag" name="tag">
-            <option value="">All topics</option>
-            {tags.map((tag) => <option value={tag}>{tag} ({posts.filter((post) => post.data.tags.includes(tag)).length})</option>)}
-          </select>
-        </div>
-        <button type="reset" id="search-clear" hidden>Clear filters</button>
+        <TopicSelect topics={tags.map((tag) => ({ value: tag, count: posts.filter((post) => post.data.tags.includes(tag)).length }))} />
+        <button type="button" id="search-clear" hidden>Clear filters</button>
       </div>
     </form>
     <p id="search-status" class="search-status" role="status" aria-live="polite">{posts.length} posts. Start typing to narrow them down.</p>
     <ol id="search-results" class="search-results" aria-label="Search results" aria-busy="false">
       {posts.map((post) => <li><PostCard post={post} /></li>)}
     </ol>
-    <noscript><p class="search-status">Search needs JavaScript. You can still browse the posts above or <a href="/tags/">browse by topic</a>.</p></noscript>
+    <noscript><p class="search-status">Search needs JavaScript. You can still browse the posts above or <a href={getSitePath("/tags/")}>browse by topic</a>.</p></noscript>
     <span id="search-runtime" hidden data-dev={import.meta.env.DEV}></span>
   </Container>
 </BaseLayout>

@@ -1,0 +1,37 @@
+---
+import { Select } from '@starwind-ui/astro/select';
+import Check from '@tabler/icons/outline/check.svg';
+import ChevronDown from '@tabler/icons/outline/chevron-down.svg';
+
+interface Props {
+  topics: { value: string; count: number }[];
+}
+const { topics } = Astro.props;
+const options = [{ value: '', label: 'All topics' }, ...topics.map(({ value, count }) => ({ value, label: `${value} (${count})` }))];
+---
+
+<Select.Root data-topics={JSON.stringify(topics.map(({ value }) => value))} id="search-tag" name="tag" defaultValue="" modal={false} class="flex min-w-0 items-center gap-3 text-sm">
+  <Select.Label class="text-[var(--reader-soft)]">Topic</Select.Label>
+  <Select.Trigger class="group flex min-h-11 min-w-40 items-center justify-between gap-5 rounded-md border border-[var(--reader-line)] bg-[var(--reader-paper)] px-3 py-2 text-left text-[var(--reader-ink)] transition-colors hover:bg-[var(--reader-control)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--reader-link)] motion-reduce:transition-none">
+    <Select.Value placeholder="All topics">All topics</Select.Value>
+    <Select.Icon class="shrink-0 text-[var(--reader-soft)] transition-transform group-data-[state=open]:rotate-180 motion-reduce:transition-none">
+      <ChevronDown class="size-4" />
+    </Select.Icon>
+  </Select.Trigger>
+  <Select.Portal>
+    <Select.Positioner sideOffset={6} alignItemWithTrigger={false} class="z-50">
+      <Select.Popup aria-label="Topics" class="max-h-[min(22rem,60dvh)] min-w-[var(--anchor-width)] max-w-[calc(100vw-2rem)] overflow-y-auto overscroll-contain rounded-lg border border-[var(--reader-line)] bg-[var(--reader-paper)] p-1.5 text-sm text-[var(--reader-ink)] shadow-lg outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 motion-reduce:animate-none">
+        <Select.List>
+          {options.map(({ value, label }) => (
+            <Select.Item value={value} class="relative flex min-h-11 cursor-default select-none items-center gap-3 rounded px-3 py-2 pr-9 outline-none data-highlighted:bg-[var(--reader-control)]">
+              <Select.ItemText>{label}</Select.ItemText>
+              <Select.ItemIndicator class="absolute right-2.5 text-[var(--reader-link)]">
+                <Check class="size-4" />
+              </Select.ItemIndicator>
+            </Select.Item>
+          ))}
+        </Select.List>
+      </Select.Popup>
+    </Select.Positioner>
+  </Select.Portal>
+</Select.Root>

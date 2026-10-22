@@ -6,14 +6,44 @@ function getLanguage(pre: Element, code: Element | null): string {
   return match ? match[1] : "text";
 }
 
+const feedbackTimers = new WeakMap<HTMLButtonElement, number>();
+
 function showFeedback(button: HTMLButtonElement, feedback: HTMLElement, message: string): void {
+  window.clearTimeout(feedbackTimers.get(button));
   feedback.textContent = message;
-  const original = "Copy";
   button.textContent = message === "Copied" ? "Copied" : "Copy failed";
-  window.setTimeout(() => {
-    button.textContent = original;
-    feedback.textContent = "";
-  }, 2000);
+  feedbackTimers.set(
+    button,
+    window.setTimeout(() => {
+      button.textContent = "Copy";
+      feedback.textContent = "";
+    }, 2500),
+  );
+}
+
+async function copyText(text: string): Promise<void> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return;
+  } catch {
+    // Older browsers and denied Clipboard API permissions may allow a user-initiated copy.
+    const previousFocus = document.activeElement;
+    const input = document.createElement("textarea");
+    input.value = text;
+    input.readOnly = true;
+    input.style.cssText = "position:fixed;inset:0 auto auto 0;opacity:0;pointer-events:none";
+    document.body.append(input);
+    input.select();
+    input.setSelectionRange(0, text.length);
+    let copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } finally {
+      input.remove();
+      if (previousFocus instanceof HTMLElement) previousFocus.focus({ preventScroll: true });
+    }
+    if (!copied) throw new Error("Clipboard access is unavailable");
+  }
 }
 
 export function initializeCodeBlocks(): void {
@@ -28,6 +58,7 @@ export function initializeCodeBlocks(): void {
 
     const header = document.createElement("div");
     header.className = "code-block-header";
+    header.setAttribute("data-pagefind-ignore", "");
 
     const label = document.createElement("span");
     label.className = "code-block-lang";
@@ -41,25 +72,20 @@ export function initializeCodeBlocks(): void {
     button.setAttribute("data-pagefind-ignore", "");
 
     const feedback = document.createElement("span");
-    feedback.className = "code-block-feedback";
+    feedback.className = "code-block-feedback sr-only";
     feedback.setAttribute("role", "status");
     feedback.setAttribute("aria-live", "polite");
 
     button.addEventListener("click", async () => {
       const text = code ? (code.textContent ?? "") : "";
-      if (
-        typeof navigator === "undefined" ||
-        !navigator.clipboard ||
-        typeof navigator.clipboard.writeText !== "function"
-      ) {
-        showFeedback(button, feedback, "Copy not available in this browser");
-        return;
-      }
+      button.disabled = true;
       try {
-        await navigator.clipboard.writeText(text);
+        await copyText(text);
         showFeedback(button, feedback, "Copied");
       } catch {
-        showFeedback(button, feedback, "Copy failed");
+        showFeedback(button, feedback, "Copy failed. Select the code and copy it manually.");
+      } finally {
+        button.disabled = false;
       }
     });
 
@@ -70,15 +96,4 @@ export function initializeCodeBlocks(): void {
     pre.replaceWith(wrapper);
     wrapper.append(header, pre);
   });
-}
-
-if (typeof document !== "undefined") {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initializeCodeBlocks, {
-      once: true,
-    });
-  } else {
-    initializeCodeBlocks();
-  }
-  document.addEventListener("astro:after-swap", initializeCodeBlocks);
 }
